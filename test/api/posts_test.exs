@@ -3,7 +3,6 @@ defmodule ElixirDaze.Api.PostsTest do
   use AuthTestSupport
   use EctoFixtures
   import Voorhees.JSONApi
-  import ElixirDaze.JsonFor
 
   alias ElixirDaze.{Post, Repo}
 
@@ -17,10 +16,23 @@ defmodule ElixirDaze.Api.PostsTest do
       |> Repo.all()
       |> length()
 
-    conn =
+    data = %{
+      "data" => %{
+        "type" => "post",
+        "attributes" => %{
+          "title" => "Test title",
+          "body" => String.duplicate("a", 100)
+        },
+        "format" => "json-api"
+      }
+    }
+
+    payload =
       conn
-      |> authorize_as(users.one)
-      |> post(post_path(conn, :create), json_for(:post, %{title: "Test title", body: String.duplicate("a", 100)}))
+      |> post(session_path(conn, :create), %{email: users.one.email, password: "password"})
+      |> recycle()
+      |> Plug.Conn.put_req_header("content-type", "application/vnd.api+json")
+      |> post(post_path(conn, :create), data)
       |> json_response(201)
 
     posts =
@@ -30,9 +42,28 @@ defmodule ElixirDaze.Api.PostsTest do
 
     post = List.last(posts)
 
-    conn
-    |> assert_data(post)
-    |> assert_relationship(users.one, for: post)
+    expected_payload = %{
+      "data" => %{
+        "attributes" => %{
+          "title" => "Test title",
+          "body" => String.duplicate("a", 100),
+          "published-at" => nil,
+        },
+        "relationships" => %{
+          "user" => %{
+            "data" => %{
+              "type" => "user",
+              "id" => "#{users.one.id}"
+            }
+          }
+        },
+        "id" => "#{post.id}",
+        "type" => "post"
+      },
+      "jsonapi" => %{"version" => "1.0"}
+    }
+
+    assert payload == expected_payload
 
     assert count + 1 == length(posts)
   end
@@ -45,9 +76,22 @@ defmodule ElixirDaze.Api.PostsTest do
       |> Repo.all()
       |> length()
 
+    data = %{
+      "data" => %{
+        "type" => "post",
+        "attributes" => %{
+          "title" => "Test title",
+          "body" => "too short"
+        },
+        "format" => "json-api"
+      }
+    }
+
     conn
-    |> authorize_as(users.one)
-    |> post(post_path(conn, :create), json_for(:post, %{title: "Test title", body: "too short"}))
+    |> post(session_path(conn, :create), %{email: users.one.email, password: "password"})
+    |> recycle()
+    |> Plug.Conn.put_req_header("content-type", "application/vnd.api+json")
+    |> post(post_path(conn, :create), data)
     |> json_response(400)
 
     posts =
@@ -60,35 +104,94 @@ defmodule ElixirDaze.Api.PostsTest do
 
   @tag fixtures: [:posts]
   test "updating post as a user", %{conn: conn, data: %{users: users, posts: posts}} do
-    conn =
+    data = %{
+      "data" => %{
+        "id" => "#{posts.one.id}",
+        "type" => "post",
+        "attributes" => %{
+          "title" => "New title",
+          "body" => String.duplicate("a", 100)
+        },
+        "format" => "json-api"
+      }
+    }
+
+    payload =
       conn
       |> authorize_as(users.one)
-      |> put(post_path(conn, :update, posts.one.id), json_for(:post, %{title: "New title"}))
+      |> put(post_path(conn, :update, posts.one.id), data)
       |> json_response(200)
 
     post = Repo.get(Post, posts.one.id)
 
     assert post.title == "New title"
 
-    conn
-    |> assert_data(post)
-    |> assert_relationship(users.one, for: post)
+    expected_payload = %{
+      "data" => %{
+        "attributes" => %{
+          "title" => "New title",
+          "body" => String.duplicate("a", 100),
+          "published-at" => "2016-01-01T00:00:00Z",
+        },
+        "relationships" => %{
+          "user" => %{
+            "data" => %{
+              "type" => "user",
+              "id" => "#{users.one.id}"
+            }
+          }
+        },
+        "id" => "#{post.id}",
+        "type" => "post"
+      },
+      "jsonapi" => %{"version" => "1.0"}
+    }
+
+    assert payload == expected_payload
   end
 
   @tag fixtures: [:posts]
   test "updating post as a user with invalid data", %{conn: conn, data: %{users: users, posts: posts}} do
+    data = %{
+      "data" => %{
+        "type" => "post",
+        "id" => "#{posts.one.id}",
+        "attributes" => %{
+          "title" => "Test title",
+          "body" => "too short"
+        },
+        "format" => "json-api"
+      }
+    }
+
     conn
-    |> authorize_as(users.one)
-    |> put(post_path(conn, :update, posts.one.id), json_for(:post, %{body: "too short"}))
+    |> post(session_path(conn, :create), %{email: users.one.email, password: "password"})
+    |> recycle()
+    |> Plug.Conn.put_req_header("content-type", "application/vnd.api+json")
+    |> put(post_path(conn, :update, posts.one.id), data)
     |> json_response(400)
   end
 
   @tag fixtures: [:posts]
   test "updating post as a user you don't own", %{conn: conn, data: %{users: users, posts: posts}} do
+    data = %{
+      "data" => %{
+        "id" => "#{posts.one.id}",
+        "type" => "post",
+        "attributes" => %{
+          "title" => "New title",
+          "body" => String.duplicate("a", 100)
+        },
+        "format" => "json-api"
+      }
+    }
+
     conn =
       conn
-      |> authorize_as(users.one)
-      |> put(post_path(conn, :update, posts.two.id), json_for(:post, %{title: "New title"}))
+      |> post(session_path(conn, :create), %{email: users.one.email, password: "password"})
+      |> recycle()
+      |> Plug.Conn.put_req_header("content-type", "application/vnd.api+json")
+      |> put(post_path(conn, :update, posts.two.id), data)
 
     post = Repo.get(Post, posts.one.id)
     refute post.title == "New title"
@@ -101,7 +204,9 @@ defmodule ElixirDaze.Api.PostsTest do
 
     conn =
       conn
-      |> authorize_as(users.one)
+      |> post(session_path(conn, :create), %{email: users.one.email, password: "password"})
+      |> recycle()
+      |> Plug.Conn.put_req_header("content-type", "application/vnd.api+json")
       |> delete(post_path(conn, :delete, posts.one.id))
 
     assert conn.status == 204
@@ -114,7 +219,9 @@ defmodule ElixirDaze.Api.PostsTest do
 
     conn =
       conn
-      |> authorize_as(users.one)
+      |> post(session_path(conn, :create), %{email: users.one.email, password: "password"})
+      |> recycle()
+      |> Plug.Conn.put_req_header("content-type", "application/vnd.api+json")
       |> delete(post_path(conn, :delete, posts.two.id))
 
     assert conn.status == 404
@@ -125,7 +232,9 @@ defmodule ElixirDaze.Api.PostsTest do
   test "deleting a post that doesn't exist", %{conn: conn, data: %{users: users}} do
     conn =
       conn
-      |> authorize_as(users.one)
+      |> post(session_path(conn, :create), %{email: users.one.email, password: "password"})
+      |> recycle()
+      |> Plug.Conn.put_req_header("content-type", "application/vnd.api+json")
       |> delete(post_path(conn, :delete, 1))
 
     assert conn.status == 404
@@ -133,49 +242,218 @@ defmodule ElixirDaze.Api.PostsTest do
 
   @tag fixtures: [:posts]
   test "index querying for all posts", %{conn: conn, data: %{users: users, posts: posts}} do
-    conn
-    |> get(post_path(conn, :index))
-    |> json_response(200)
-    |> assert_data(posts.one)
-    |> assert_relationship(users.one, for: posts.one)
-    |> assert_data(posts.two)
-    |> assert_relationship(users.two, for: posts.two)
-    |> assert_data(posts.three)
-    |> assert_relationship(users.one, for: posts.three)
+    expected_payload = %{
+      "data" => [%{
+        "attributes" => %{
+          "title" => posts.two.title,
+          "body" => posts.two.body,
+          "published-at" => Ecto.DateTime.to_iso8601(posts.two.published_at),
+        },
+        "relationships" => %{
+          "user" => %{
+            "data" => %{
+              "type" => "user",
+              "id" => "#{users.two.id}"
+            }
+          }
+        },
+        "id" => "#{posts.two.id}",
+        "type" => "post"
+      }, %{
+        "attributes" => %{
+          "title" => posts.one.title,
+          "body" => posts.one.body,
+          "published-at" => Ecto.DateTime.to_iso8601(posts.one.published_at),
+        },
+        "relationships" => %{
+          "user" => %{
+            "data" => %{
+              "type" => "user",
+              "id" => "#{users.one.id}"
+            }
+          }
+        },
+        "id" => "#{posts.one.id}",
+        "type" => "post"
+      }, %{
+        "attributes" => %{
+          "title" => posts.three.title,
+          "body" => posts.three.body,
+          "published-at" => Ecto.DateTime.to_iso8601(posts.three.published_at),
+        },
+        "relationships" => %{
+          "user" => %{
+            "data" => %{
+              "type" => "user",
+              "id" => "#{users.one.id}"
+            }
+          }
+        },
+        "id" => "#{posts.three.id}",
+        "type" => "post"
+      }],
+      "jsonapi" => %{"version" => "1.0"}
+    }
+
+    payload =
+      conn
+      |> get(post_path(conn, :index))
+      |> json_response(200)
+
+    assert payload == expected_payload
   end
 
   @tag fixtures: [:posts]
   test "index querying by user_id", %{conn: conn, data: %{users: users, posts: posts}} do
-    conn
-    |> get(post_path(conn, :index), %{user_id: users.one.id})
-    |> json_response(200)
-    |> assert_data(posts.one)
-    |> assert_relationship(users.one, for: posts.one)
-    |> refute_data(posts.two)
-    |> assert_data(posts.three)
-    |> assert_relationship(users.one, for: posts.three)
+    expected_payload = %{
+      "data" => [%{
+        "attributes" => %{
+          "title" => posts.one.title,
+          "body" => posts.one.body,
+          "published-at" => Ecto.DateTime.to_iso8601(posts.one.published_at),
+        },
+        "relationships" => %{
+          "user" => %{
+            "data" => %{
+              "type" => "user",
+              "id" => "#{users.one.id}"
+            }
+          }
+        },
+        "id" => "#{posts.one.id}",
+        "type" => "post"
+      }, %{
+        "attributes" => %{
+          "title" => posts.three.title,
+          "body" => posts.three.body,
+          "published-at" => Ecto.DateTime.to_iso8601(posts.three.published_at),
+        },
+        "relationships" => %{
+          "user" => %{
+            "data" => %{
+              "type" => "user",
+              "id" => "#{users.one.id}"
+            }
+          }
+        },
+        "id" => "#{posts.three.id}",
+        "type" => "post"
+      }],
+      "jsonapi" => %{"version" => "1.0"}
+    }
+    payload =
+      conn
+      |> get(post_path(conn, :index), %{user_id: users.one.id})
+      |> json_response(200)
+
+    assert payload == expected_payload
   end
 
   @tag fixtures: [:posts]
   test "index querying by month and year", %{conn: conn, data: %{users: users, posts: posts}} do
-    conn
-    |> get(post_path(conn, :index), %{month: 1, year: 2016})
-    |> json_response(200)
-    |> assert_data(posts.one)
-    |> assert_relationship(users.one, for: posts.one)
-    |> assert_data(posts.two)
-    |> assert_relationship(users.two, for: posts.two)
-    |> refute_data(posts.three)
+    expected_payload = %{
+      "data" => [%{
+        "attributes" => %{
+          "title" => posts.two.title,
+          "body" => posts.two.body,
+          "published-at" => Ecto.DateTime.to_iso8601(posts.two.published_at),
+        },
+        "relationships" => %{
+          "user" => %{
+            "data" => %{
+              "type" => "user",
+              "id" => "#{users.two.id}"
+            }
+          }
+        },
+        "id" => "#{posts.two.id}",
+        "type" => "post"
+      }, %{
+        "attributes" => %{
+          "title" => posts.one.title,
+          "body" => posts.one.body,
+          "published-at" => Ecto.DateTime.to_iso8601(posts.one.published_at),
+        },
+        "relationships" => %{
+          "user" => %{
+            "data" => %{
+              "type" => "user",
+              "id" => "#{users.one.id}"
+            }
+          }
+        },
+        "id" => "#{posts.one.id}",
+        "type" => "post"
+      }],
+      "jsonapi" => %{"version" => "1.0"}
+    }
+    payload =
+      conn
+      |> get(post_path(conn, :index), %{month: 1, year: 2016})
+      |> json_response(200)
+
+    assert payload == expected_payload
   end
 
   @tag fixtures: [:posts]
-  test "index querying can limit", %{conn: conn, data: %{users: users, posts: posts}} do
-    data = conn
+  test "index querying can compose", %{conn: conn, data: %{users: users, posts: posts}} do
+    expected_payload = %{
+      "data" => [%{
+        "attributes" => %{
+          "title" => posts.two.title,
+          "body" => posts.two.body,
+          "published-at" => Ecto.DateTime.to_iso8601(posts.two.published_at),
+        },
+        "relationships" => %{
+          "user" => %{
+            "data" => %{
+              "type" => "user",
+              "id" => "#{users.two.id}"
+            }
+          }
+        },
+        "id" => "#{posts.two.id}",
+        "type" => "post"
+      }, %{
+        "attributes" => %{
+          "title" => posts.one.title,
+          "body" => posts.one.body,
+          "published-at" => Ecto.DateTime.to_iso8601(posts.one.published_at),
+        },
+        "relationships" => %{
+          "user" => %{
+            "data" => %{
+              "type" => "user",
+              "id" => "#{users.one.id}"
+            }
+          }
+        },
+        "id" => "#{posts.one.id}",
+        "type" => "post"
+      }, %{
+        "attributes" => %{
+          "title" => posts.three.title,
+          "body" => posts.three.body,
+          "published-at" => Ecto.DateTime.to_iso8601(posts.three.published_at),
+        },
+        "relationships" => %{
+          "user" => %{
+            "data" => %{
+              "type" => "user",
+              "id" => "#{users.one.id}"
+            }
+          }
+        },
+        "id" => "#{posts.three.id}",
+        "type" => "post"
+      }],
+      "jsonapi" => %{"version" => "1.0"}
+    }
+
+    payload = conn
       |> get(post_path(conn, :index), %{limit: 1, month: 1, year: 2016, order_by: :published_at})
       |> json_response(200)
-      |> assert_data(posts.one)
-      |> assert_relationship(users.one, for: posts.one)
 
-    assert length(data["data"]) == 1
+    assert payload == expected_payload
   end
 end
