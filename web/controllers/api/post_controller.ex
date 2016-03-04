@@ -2,24 +2,15 @@ defmodule ElixirDaze.Api.PostController do
   alias ElixirDaze.{Post, PostView, Repo}
 
   use ElixirDaze.Web, :controller
+  use Inquisitor, with: Post
 
   def index(conn, params) do
     posts =
-      build_query(params)
+      build_post_query(params)
       |> preload([:user])
       |> Repo.all()
 
     render(conn, PostView, :index, data: posts)
-  end
-
-  def build_query(params) when is_map(params) do
-    build_query(Post, Map.to_list(params))
-  end
-
-  def build_query(q, []), do: q
-  def build_query(q, [{key, value} | tail]) do
-    Ecto.Query.where(q, [r], field(r, ^String.to_existing_atom(key)) == ^value)
-    |> build_query(tail)
   end
 
   def create(conn, %{"data" => %{"attributes" => attributes, "type" => "post"}}) do
@@ -79,4 +70,21 @@ defmodule ElixirDaze.Api.PostController do
         |> preload([:user])
         |> Repo.get(id)
 
+  defp build_post_query(query, [{attr, value} | tail]) when attr == "month" or attr == "year" do
+    query
+    |> Ecto.Query.where([p], fragment("date_part(?, ?) = ?", ^attr, p.published_at, type(^value, :integer)))
+    |> build_post_query(tail)
+  end
+
+  defp build_post_query(query, [{"limit", limit} | tail]) do
+    query
+    |> Ecto.Query.limit(^limit)
+    |> build_post_query(tail)
+  end
+
+  defp build_post_query(query, [{"order_by", field} | tail]) do
+    query
+    |> Ecto.Query.order_by([asc: ^field])
+    |> build_post_query(tail)
+  end
 end
