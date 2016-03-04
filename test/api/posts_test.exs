@@ -2,7 +2,6 @@ defmodule ElixirDaze.Api.PostsTest do
   use ElixirDaze.ConnCase
   use AuthTestSupport
   use EctoFixtures
-  import Voorhees.JSONApi
 
   alias ElixirDaze.{Post, Repo}
 
@@ -245,22 +244,6 @@ defmodule ElixirDaze.Api.PostsTest do
     expected_payload = %{
       "data" => [%{
         "attributes" => %{
-          "title" => posts.two.title,
-          "body" => posts.two.body,
-          "published-at" => Ecto.DateTime.to_iso8601(posts.two.published_at),
-        },
-        "relationships" => %{
-          "user" => %{
-            "data" => %{
-              "type" => "user",
-              "id" => "#{users.two.id}"
-            }
-          }
-        },
-        "id" => "#{posts.two.id}",
-        "type" => "post"
-      }, %{
-        "attributes" => %{
           "title" => posts.one.title,
           "body" => posts.one.body,
           "published-at" => Ecto.DateTime.to_iso8601(posts.one.published_at),
@@ -274,6 +257,22 @@ defmodule ElixirDaze.Api.PostsTest do
           }
         },
         "id" => "#{posts.one.id}",
+        "type" => "post"
+      }, %{
+        "attributes" => %{
+          "title" => posts.two.title,
+          "body" => posts.two.body,
+          "published-at" => Ecto.DateTime.to_iso8601(posts.two.published_at),
+        },
+        "relationships" => %{
+          "user" => %{
+            "data" => %{
+              "type" => "user",
+              "id" => "#{users.two.id}"
+            }
+          }
+        },
+        "id" => "#{posts.two.id}",
         "type" => "post"
       }, %{
         "attributes" => %{
@@ -344,114 +343,6 @@ defmodule ElixirDaze.Api.PostsTest do
     payload =
       conn
       |> get(post_path(conn, :index), %{user_id: users.one.id})
-      |> json_response(200)
-
-    assert payload == expected_payload
-  end
-
-  @tag fixtures: [:posts]
-  test "index querying by month and year", %{conn: conn, data: %{users: users, posts: posts}} do
-    expected_payload = %{
-      "data" => [%{
-        "attributes" => %{
-          "title" => posts.two.title,
-          "body" => posts.two.body,
-          "published-at" => Ecto.DateTime.to_iso8601(posts.two.published_at),
-        },
-        "relationships" => %{
-          "user" => %{
-            "data" => %{
-              "type" => "user",
-              "id" => "#{users.two.id}"
-            }
-          }
-        },
-        "id" => "#{posts.two.id}",
-        "type" => "post"
-      }, %{
-        "attributes" => %{
-          "title" => posts.one.title,
-          "body" => posts.one.body,
-          "published-at" => Ecto.DateTime.to_iso8601(posts.one.published_at),
-        },
-        "relationships" => %{
-          "user" => %{
-            "data" => %{
-              "type" => "user",
-              "id" => "#{users.one.id}"
-            }
-          }
-        },
-        "id" => "#{posts.one.id}",
-        "type" => "post"
-      }],
-      "jsonapi" => %{"version" => "1.0"}
-    }
-    payload =
-      conn
-      |> get(post_path(conn, :index), %{month: 1, year: 2016})
-      |> json_response(200)
-
-    assert payload == expected_payload
-  end
-
-  @tag fixtures: [:posts]
-  test "index querying can compose", %{conn: conn, data: %{users: users, posts: posts}} do
-    expected_payload = %{
-      "data" => [%{
-        "attributes" => %{
-          "title" => posts.two.title,
-          "body" => posts.two.body,
-          "published-at" => Ecto.DateTime.to_iso8601(posts.two.published_at),
-        },
-        "relationships" => %{
-          "user" => %{
-            "data" => %{
-              "type" => "user",
-              "id" => "#{users.two.id}"
-            }
-          }
-        },
-        "id" => "#{posts.two.id}",
-        "type" => "post"
-      }, %{
-        "attributes" => %{
-          "title" => posts.one.title,
-          "body" => posts.one.body,
-          "published-at" => Ecto.DateTime.to_iso8601(posts.one.published_at),
-        },
-        "relationships" => %{
-          "user" => %{
-            "data" => %{
-              "type" => "user",
-              "id" => "#{users.one.id}"
-            }
-          }
-        },
-        "id" => "#{posts.one.id}",
-        "type" => "post"
-      }, %{
-        "attributes" => %{
-          "title" => posts.three.title,
-          "body" => posts.three.body,
-          "published-at" => Ecto.DateTime.to_iso8601(posts.three.published_at),
-        },
-        "relationships" => %{
-          "user" => %{
-            "data" => %{
-              "type" => "user",
-              "id" => "#{users.one.id}"
-            }
-          }
-        },
-        "id" => "#{posts.three.id}",
-        "type" => "post"
-      }],
-      "jsonapi" => %{"version" => "1.0"}
-    }
-
-    payload = conn
-      |> get(post_path(conn, :index), %{limit: 1, month: 1, year: 2016, order_by: :published_at})
       |> json_response(200)
 
     assert payload == expected_payload
