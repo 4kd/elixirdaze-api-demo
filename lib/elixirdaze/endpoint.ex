@@ -1,5 +1,5 @@
 defmodule ElixirDaze.Endpoint do
-  use Phoenix.Endpoint, otp_app: :elixirdaze
+  use Phoenix.Endpoint, otp_app: :elixir_daze
 
   socket "/socket", ElixirDaze.UserSocket
 
@@ -8,7 +8,7 @@ defmodule ElixirDaze.Endpoint do
   # You should set gzip to true if you are running phoenix.digest
   # when deploying your static files in production.
   plug Plug.Static,
-    at: "/", from: :elixirdaze, gzip: false,
+    at: "/", from: :elixir_daze, gzip: false,
     only: ~w(css fonts images js favicon.ico robots.txt)
 
   # Code reloading can be explicitly enabled under the

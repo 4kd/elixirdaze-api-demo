@@ -20,5 +20,5 @@ defmodule ElixirDaze.Gettext do
 
   See the [Gettext Docs](http://hexdocs.pm/gettext) for detailed usage.
   """
-  use Gettext, otp_app: :elixirdaze
+  use Gettext, otp_app: :elixir_daze
 end

@@ -6,7 +6,7 @@
 use Mix.Config
 
 # Configures the endpoint
-config :elixirdaze, ElixirDaze.Endpoint,
+config :elixir_daze, ElixirDaze.Endpoint,
   url: [host: "localhost"],
   root: Path.dirname(__DIR__),
   secret_key_base: "GJLeEKbqlXu19W7vsdtseq31RqooZVze2/XTpXnuK6ugf6RyDyXD3twJ179UGMiU",

@@ -2,7 +2,7 @@ defmodule ElixirDaze.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :elixirdaze,
+    [app: :elixir_daze,
      version: "0.0.1",
      elixir: "~> 1.0",
      elixirc_paths: elixirc_paths(Mix.env),
@@ -43,6 +43,7 @@ defmodule ElixirDaze.Mixfile do
      {:comeonin, "~> 2.1.0"},
      {:auth_test_support, "~> 0.0.5", only: :test},
      {:inquisitor, "~> 0.1.0"},
+     {:elixilorem, "~> 0.0.1", only: :dev},
      {:ja_serializer, "~> 0.7"}]
   end
 

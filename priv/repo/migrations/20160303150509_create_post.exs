@@ -4,7 +4,7 @@ defmodule ElixirDaze.Repo.Migrations.CreatePost do
   def change do
     create table(:posts) do
       add :title, :string
-      add :body, :string
+      add :body, :text
       add :published_at, :datetime
       add :user_id, references(:users)
 
