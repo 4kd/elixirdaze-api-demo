@@ -1,5 +1,6 @@
 posts model: ElixirDaze.Post, repo: ElixirDaze.Repo do
   one do
+    id 1
     title "Post One"
     body "This is a test post"
     user fixtures(:users).users.one
@@ -7,6 +8,7 @@ posts model: ElixirDaze.Post, repo: ElixirDaze.Repo do
   end
 
   two do
+    id 2
     title "Post two"
     body "This is another test post"
     user fixtures(:users).users.two
@@ -14,6 +16,7 @@ posts model: ElixirDaze.Post, repo: ElixirDaze.Repo do
   end
 
   three do
+    id 3
     title "Post Three"
     body "This is a test post"
     user fixtures(:users).users.one

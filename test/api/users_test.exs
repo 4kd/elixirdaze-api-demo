@@ -1,7 +1,5 @@
 defmodule ElixirDaze.Api.UsersTest do
   use ElixirDaze.ConnCase
-  import ElixirDaze.JsonFor
-  import Voorhees.JSONApi
 
   alias ElixirDaze.{Repo, User}
 
@@ -9,20 +7,37 @@ defmodule ElixirDaze.Api.UsersTest do
     count = Repo.all(User) |> length()
 
     data = %{
-      name: "brian",
-      email: "user@example.com",
-      password: "password",
-      "password-confirmation": "password"
+      "data" => %{
+        "type" => "user",
+        "attributes" => %{
+          name: "Brian",
+          email: "user@example.com",
+          password: "password",
+          "password-confirmation": "password"
+        }
+      }
     }
 
-    conn = post(conn, user_path(conn, :create), json_for(:user, data))
+    conn = post(conn, user_path(conn, :create), data)
 
     users = Repo.all(User)
     user = List.last(users)
 
-    conn
-    |> json_response(201)
-    |> assert_data(user)
+    payload = json_response(conn, 201)
+
+    expected_payload = %{
+      "data" => %{
+        "attributes" => %{
+          "email" => "user@example.com",
+           "name" => "Brian"
+          },
+         "id" => "#{user.id}",
+         "type" => "user"
+      },
+      "jsonapi" => %{"version" => "1.0"}
+    }
+
+    assert payload == expected_payload
 
     assert count + 1 == length(users)
   end
@@ -31,13 +46,18 @@ defmodule ElixirDaze.Api.UsersTest do
     count = Repo.all(User) |> length()
 
     data = %{
-      name: "brian",
-      email: "user@example.com",
-      password: "password",
-      "password-confirmation": "badpassword"
+      "data" => %{
+        "type" => "user",
+        "attributes" => %{
+          name: "Brian",
+          email: "user@example.com",
+          password: "password",
+          "password-confirmation": "badpassword"
+        }
+      }
     }
 
-    conn = post(conn, user_path(conn, :create), json_for(:user, data))
+    conn = post(conn, user_path(conn, :create), data)
 
     assert conn.status == 422
     assert count == Repo.all(User) |> length()
