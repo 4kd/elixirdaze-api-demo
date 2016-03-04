@@ -1,7 +1,7 @@
-defmodule Elixirdaze.Api.UserController do
-  use Elixirdaze.Web, :controller
+defmodule ElixirDaze.Api.UserController do
+  use ElixirDaze.Web, :controller
 
-  alias Elixirdaze.{Repo, User, UserView}
+  alias ElixirDaze.{Repo, User, UserView}
 
   def create(conn, %{"data" => %{"attributes" => attributes, "type" => "user"}}) do
     %User{}

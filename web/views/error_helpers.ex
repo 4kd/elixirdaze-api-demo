@@ -1,4 +1,4 @@
-defmodule Elixirdaze.ErrorHelpers do
+defmodule ElixirDaze.ErrorHelpers do
   @moduledoc """
   Conveniences for translating and building error messages.
   """
@@ -26,10 +26,10 @@ defmodule Elixirdaze.ErrorHelpers do
     #
     #     dngettext "errors", "1 file", "%{count} files", count
     #
-    Gettext.dngettext(Elixirdaze.Gettext, "errors", msg, msg, opts[:count], opts)
+    Gettext.dngettext(ElixirDaze.Gettext, "errors", msg, msg, opts[:count], opts)
   end
 
   def translate_error(msg) do
-    Gettext.dgettext(Elixirdaze.Gettext, "errors", msg)
+    Gettext.dgettext(ElixirDaze.Gettext, "errors", msg)
   end
 end

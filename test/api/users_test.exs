@@ -1,9 +1,9 @@
-defmodule Elixirdaze.Api.UsersTest do
-  use Elixirdaze.ConnCase
-  import Elixirdaze.JsonFor
+defmodule ElixirDaze.Api.UsersTest do
+  use ElixirDaze.ConnCase
+  import ElixirDaze.JsonFor
   import Voorhees.JSONApi
 
-  alias Elixirdaze.{Repo, User}
+  alias ElixirDaze.{Repo, User}
 
   test "creating a new user succesfully", %{conn: conn} do
     count = Repo.all(User) |> length()

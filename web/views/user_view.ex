@@ -1,5 +1,5 @@
-defmodule Elixirdaze.UserView do
-  use Elixirdaze.Web, :view
+defmodule ElixirDaze.UserView do
+  use ElixirDaze.Web, :view
   use JaSerializer.PhoenixView
 
   attributes [:email, :name]

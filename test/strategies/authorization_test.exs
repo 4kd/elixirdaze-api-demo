@@ -1,8 +1,8 @@
-defmodule Elixirdaze.Strategies.AuthorizationTest do
-  use Elixirdaze.ConnCase
+defmodule ElixirDaze.Strategies.AuthorizationTest do
+  use ElixirDaze.ConnCase
   use EctoFixtures
 
-  alias Elixirdaze.{Strategies.Authorization, Router, User}
+  alias ElixirDaze.{Strategies.Authorization, Router, User}
 
   setup %{conn: conn} do
     conn =

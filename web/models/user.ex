@@ -1,8 +1,8 @@
-defmodule Elixirdaze.User do
-  use Elixirdaze.Web, :model
+defmodule ElixirDaze.User do
+  use ElixirDaze.Web, :model
   import Comeonin.Bcrypt
 
-  alias Elixirdaze.{Post}
+  alias ElixirDaze.{Post}
 
   schema "users" do
     field :name, :string

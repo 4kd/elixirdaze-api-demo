@@ -1,5 +1,5 @@
-defmodule Elixirdaze.Router do
-  use Elixirdaze.Web, :router
+defmodule ElixirDaze.Router do
+  use ElixirDaze.Web, :router
 
   pipeline :api do
     plug :accepts, ["json-api"]
@@ -9,10 +9,10 @@ defmodule Elixirdaze.Router do
   end
 
   pipeline :authorized do
-    plug Elixirdaze.Strategies.Authorization
+    plug ElixirDaze.Strategies.Authorization
   end
 
-  scope "/api", Elixirdaze.Api do
+  scope "/api", ElixirDaze.Api do
     pipe_through :api
 
     resources "/users", UserController

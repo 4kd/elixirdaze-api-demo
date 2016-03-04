@@ -1,11 +1,11 @@
-defmodule Elixirdaze.Api.PostsTest do
-  use Elixirdaze.ConnCase
+defmodule ElixirDaze.Api.PostsTest do
+  use ElixirDaze.ConnCase
   use AuthTestSupport
   use EctoFixtures
   import Voorhees.JSONApi
-  import Elixirdaze.JsonFor
+  import ElixirDaze.JsonFor
 
-  alias Elixirdaze.{Post, Repo}
+  alias ElixirDaze.{Post, Repo}
 
   require_authorization :post_path, only: [:create, :update, :delete]
 

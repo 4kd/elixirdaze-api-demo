@@ -1,5 +1,5 @@
-defmodule Elixirdaze.ErrorView do
-  use Elixirdaze.Web, :view
+defmodule ElixirDaze.ErrorView do
+  use ElixirDaze.Web, :view
 
   def render("404.html", _assigns) do
     "Page not found"

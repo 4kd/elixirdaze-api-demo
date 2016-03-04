@@ -1,7 +1,7 @@
-defmodule Elixirdaze.Api.PostController do
-  alias Elixirdaze.{Post, PostView, Repo}
+defmodule ElixirDaze.Api.PostController do
+  alias ElixirDaze.{Post, PostView, Repo}
 
-  use Elixirdaze.Web, :controller
+  use ElixirDaze.Web, :controller
   use Inquisitor, with: Post
 
   def index(conn, params) do

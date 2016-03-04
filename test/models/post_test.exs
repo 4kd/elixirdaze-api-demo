@@ -1,8 +1,8 @@
-defmodule Elixirdaze.PostTest do
-  use Elixirdaze.ModelCase
+defmodule ElixirDaze.PostTest do
+  use ElixirDaze.ModelCase
   import ValidField
 
-  alias Elixirdaze.Post
+  alias ElixirDaze.Post
 
   test "validations" do
     %Post{}

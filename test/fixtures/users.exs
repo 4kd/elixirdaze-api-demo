@@ -1,4 +1,4 @@
-users model: Elixirdaze.User, repo: Elixirdaze.Repo do
+users model: ElixirDaze.User, repo: ElixirDaze.Repo do
   one do
     name "Brian"
     email "one@example.com"

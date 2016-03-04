@@ -6,12 +6,12 @@
 use Mix.Config
 
 # Configures the endpoint
-config :elixirdaze, Elixirdaze.Endpoint,
+config :elixirdaze, ElixirDaze.Endpoint,
   url: [host: "localhost"],
   root: Path.dirname(__DIR__),
   secret_key_base: "GJLeEKbqlXu19W7vsdtseq31RqooZVze2/XTpXnuK6ugf6RyDyXD3twJ179UGMiU",
   render_errors: [accepts: ~w(html json)],
-  pubsub: [name: Elixirdaze.PubSub,
+  pubsub: [name: ElixirDaze.PubSub,
            adapter: Phoenix.PubSub.PG2]
 
 # Configures Elixir's Logger

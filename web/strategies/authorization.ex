@@ -1,4 +1,4 @@
-defmodule Elixirdaze.Strategies.Authorization do
+defmodule ElixirDaze.Strategies.Authorization do
   import Plug.Conn
   import Ecto.Query
 
@@ -43,7 +43,7 @@ defmodule Elixirdaze.Strategies.Authorization do
   defp account_authorize(%Plug.Conn{} = conn, admin?) do
     query = account_find(conn)
 
-    case Elixirdaze.Repo.one(query) do
+    case ElixirDaze.Repo.one(query) do
       nil -> unauthorize(conn)
       account -> admin_check(conn, account, admin?)
     end

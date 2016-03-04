@@ -1,10 +1,10 @@
-defmodule Elixirdaze.Strategies.AuthenticationTest do
-  use Elixirdaze.ConnCase
+defmodule ElixirDaze.Strategies.AuthenticationTest do
+  use ElixirDaze.ConnCase
   use EctoFixtures
   import Comeonin.Bcrypt
   import AuthTestSupport, only: [assert_authorized_as: 2]
 
-  alias Elixirdaze.{Repo, User, Strategies.Authentication}
+  alias ElixirDaze.{Repo, User, Strategies.Authentication}
 
   defmodule PasswordRepo do
     def one(_),

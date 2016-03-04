@@ -1,9 +1,9 @@
-defmodule Elixirdaze.UserTest do
-  use Elixirdaze.ModelCase
+defmodule ElixirDaze.UserTest do
+  use ElixirDaze.ModelCase
   import ValidField
   import Comeonin.Bcrypt
 
-  alias Elixirdaze.User
+  alias ElixirDaze.User
 
   test "validations" do
     %User{}

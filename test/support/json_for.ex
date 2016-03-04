@@ -1,4 +1,4 @@
-defmodule Elixirdaze.JsonFor do
+defmodule ElixirDaze.JsonFor do
   def json_for(type, attributes) do
     attributes = normalize_json_attributes(attributes)
 

@@ -1,12 +1,12 @@
-defmodule Elixirdaze.Web do
+defmodule ElixirDaze.Web do
   @moduledoc """
   A module that keeps using definitions for controllers,
   views and so on.
 
   This can be used in your application as:
 
-      use Elixirdaze.Web, :controller
-      use Elixirdaze.Web, :view
+      use ElixirDaze.Web, :controller
+      use ElixirDaze.Web, :view
 
   The definitions below will be executed for every view,
   controller, etc, so keep them short and clean, focused
@@ -30,12 +30,12 @@ defmodule Elixirdaze.Web do
     quote do
       use Phoenix.Controller
 
-      alias Elixirdaze.Repo
+      alias ElixirDaze.Repo
       import Ecto
       import Ecto.Query, only: [preload: 2, from: 1, from: 2]
 
-      import Elixirdaze.Router.Helpers
-      import Elixirdaze.Gettext
+      import ElixirDaze.Router.Helpers
+      import ElixirDaze.Gettext
     end
   end
 
@@ -49,9 +49,9 @@ defmodule Elixirdaze.Web do
       # Use all HTML functionality (forms, tags, etc)
       use Phoenix.HTML
 
-      import Elixirdaze.Router.Helpers
-      import Elixirdaze.ErrorHelpers
-      import Elixirdaze.Gettext
+      import ElixirDaze.Router.Helpers
+      import ElixirDaze.ErrorHelpers
+      import ElixirDaze.Gettext
     end
   end
 
@@ -65,10 +65,10 @@ defmodule Elixirdaze.Web do
     quote do
       use Phoenix.Channel
 
-      alias Elixirdaze.Repo
+      alias ElixirDaze.Repo
       import Ecto
       import Ecto.Query, only: [from: 1, from: 2]
-      import Elixirdaze.Gettext
+      import ElixirDaze.Gettext
     end
   end
 

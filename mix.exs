@@ -1,4 +1,4 @@
-defmodule Elixirdaze.Mixfile do
+defmodule ElixirDaze.Mixfile do
   use Mix.Project
 
   def project do
@@ -17,7 +17,7 @@ defmodule Elixirdaze.Mixfile do
   #
   # Type `mix help compile.app` for more information.
   def application do
-    [mod: {Elixirdaze, []},
+    [mod: {ElixirDaze, []},
      applications: [:phoenix, :phoenix_html, :cowboy, :logger, :gettext,
                     :phoenix_ecto, :postgrex]]
   end

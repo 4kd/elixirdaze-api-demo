@@ -1,4 +1,4 @@
-defmodule Elixirdaze.ModelCase do
+defmodule ElixirDaze.ModelCase do
   @moduledoc """
   This module defines the test case to be used by
   model tests.
@@ -16,16 +16,16 @@ defmodule Elixirdaze.ModelCase do
 
   using do
     quote do
-      alias Elixirdaze.Repo
+      alias ElixirDaze.Repo
       import Ecto.Model
       import Ecto.Query, only: [from: 2]
-      import Elixirdaze.ModelCase
+      import ElixirDaze.ModelCase
     end
   end
 
   setup tags do
     unless tags[:async] do
-      Ecto.Adapters.SQL.restart_test_transaction(Elixirdaze.Repo, [])
+      Ecto.Adapters.SQL.restart_test_transaction(ElixirDaze.Repo, [])
     end
 
     :ok

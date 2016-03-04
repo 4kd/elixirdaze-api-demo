@@ -1,4 +1,4 @@
-defmodule Elixirdaze.Repo.Migrations.CreatePost do
+defmodule ElixirDaze.Repo.Migrations.CreatePost do
   use Ecto.Migration
 
   def change do

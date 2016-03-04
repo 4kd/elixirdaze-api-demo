@@ -1,7 +1,7 @@
-defmodule Elixirdaze.Endpoint do
+defmodule ElixirDaze.Endpoint do
   use Phoenix.Endpoint, otp_app: :elixirdaze
 
-  socket "/socket", Elixirdaze.UserSocket
+  socket "/socket", ElixirDaze.UserSocket
 
   # Serve at "/" the static files from "priv/static" directory.
   #
@@ -35,5 +35,5 @@ defmodule Elixirdaze.Endpoint do
     key: "_elixirdaze_key",
     signing_salt: "8ttNLta+"
 
-  plug Elixirdaze.Router
+  plug ElixirDaze.Router
 end

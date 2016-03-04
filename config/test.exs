@@ -2,7 +2,7 @@ use Mix.Config
 
 # We don't run a server during test. If one is required,
 # you can enable the server option below.
-config :elixirdaze, Elixirdaze.Endpoint,
+config :elixirdaze, ElixirDaze.Endpoint,
   http: [port: 4001],
   server: false
 
@@ -10,7 +10,7 @@ config :elixirdaze, Elixirdaze.Endpoint,
 config :logger, level: :warn
 
 # Configure your database
-config :elixirdaze, Elixirdaze.Repo,
+config :elixirdaze, ElixirDaze.Repo,
   adapter: Ecto.Adapters.Postgres,
   username: "postgres",
   password: "postgres",

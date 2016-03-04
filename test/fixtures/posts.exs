@@ -1,4 +1,4 @@
-posts model: Elixirdaze.Post, repo: Elixirdaze.Repo do
+posts model: ElixirDaze.Post, repo: ElixirDaze.Repo do
   one do
     title "Post One"
     body "This is a test post"

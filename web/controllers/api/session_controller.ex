@@ -1,7 +1,7 @@
-defmodule Elixirdaze.Api.SessionController do
-  use Elixirdaze.Web, :controller
+defmodule ElixirDaze.Api.SessionController do
+  use ElixirDaze.Web, :controller
 
-  alias Elixirdaze.{Repo, User, UserView, Strategies.Authentication}
+  alias ElixirDaze.{Repo, User, UserView, Strategies.Authentication}
 
   def create(conn, credentials) do
     Authentication.call(conn, User, Repo, credentials)

@@ -1,5 +1,5 @@
-defmodule Elixirdaze.Api.SessionTest do
-  use Elixirdaze.ConnCase
+defmodule ElixirDaze.Api.SessionTest do
+  use ElixirDaze.ConnCase
   use EctoFixtures
   use AuthTestSupport
   import Voorhees.JSONApi

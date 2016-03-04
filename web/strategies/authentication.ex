@@ -1,9 +1,9 @@
-defmodule Elixirdaze.Strategies.Authentication do
+defmodule ElixirDaze.Strategies.Authentication do
   import Ecto.Query
   import Comeonin.Bcrypt
   import Plug.Conn, only: [put_session: 3, fetch_session: 1]
 
-  alias Elixirdaze.{User}
+  alias ElixirDaze.{User}
 
   def call(conn, module, repo, %{"email" => email, "password" => password}) do
     module

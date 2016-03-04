@@ -1,7 +1,7 @@
-defmodule Elixirdaze.Post do
-  use Elixirdaze.Web, :model
+defmodule ElixirDaze.Post do
+  use ElixirDaze.Web, :model
 
-  alias Elixirdaze.{User}
+  alias ElixirDaze.{User}
 
   schema "posts" do
     field :title, :string
