@@ -28,4 +28,4 @@
   "ranch": {:hex, :ranch, "1.2.1"},
   "uuid": {:hex, :uuid, "1.1.3"},
   "valid_field": {:hex, :valid_field, "0.3.0"},
-  "voorhees": {:git, "https://github.com/bcardarella/voorhees.git", "99514667505f9e01050977c563f38f6ceec7ebad", [branch: "bc-composable-helpers"]}}
+  "voorhees": {:git, "https://github.com/bcardarella/voorhees.git", "a8af6e93ff64c5a7437b1f76bde77a5f50cedc32", [branch: "bc-composable-helpers"]}}

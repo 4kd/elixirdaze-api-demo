@@ -14,7 +14,7 @@ defmodule ElixirDaze.Post do
   end
 
   @required_fields ~w(title body)
-  @optional_fields ~w()
+  @optional_fields ~w(published_at)
 
   @doc """
   Creates a changeset based on the `model` and `params`.
