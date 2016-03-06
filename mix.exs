@@ -39,7 +39,7 @@ defmodule ElixirDaze.Mixfile do
      {:cowboy, "~> 1.0"},
      {:ecto_fixtures, github: "dockyard/ecto_fixtures", branch: "bc-module-attributes-classic"},
      {:voorhees, github: "bcardarella/voorhees", branch: "bc-composable-helpers", only: :test},
-     {:valid_field, path: "../valid_field", only: :test},
+     {:valid_field, github: "dockyard/valid_field", only: :test},
      {:comeonin, "~> 2.1.0"},
      {:auth_test_support, "~> 0.0.5", only: :test},
      {:inquisitor, "~> 0.1.0"},
